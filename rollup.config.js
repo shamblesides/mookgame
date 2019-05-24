@@ -25,14 +25,16 @@ const plugins = prod ? [
   babel(),
   json(),
   url(),
-  serve(),
+  serve({
+    contentBase: 'www'
+  }),
   livereload(),
 ]
 
 export default {
   input: 'example/index.js',
   output: {
-    dir: 'dist',
+    dir: 'www/build',
     format: 'esm'
   },
   plugins

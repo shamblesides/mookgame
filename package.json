@@ -26,8 +26,8 @@
     }
   },
   "eslintIgnore": [
-    "dist/*",
-    "webpack.config.js"
+    "www",
+    "rollup.config.js"
   ],
   "dependencies": {
     "@babel/core": "^7.3.4",
