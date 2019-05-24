@@ -2,10 +2,10 @@ import { guyTypes } from './guys.js';
 import { mid } from './math.js';
 import groundPng from './sprites/ground.png';
 import propsPng from './sprites/props.png';
-import {fill} from '../src/gfx/fill.js';
-import {pane} from '../src/gfx/pane.js';
-import { gridSheet } from '../src/gfx/gridsheet.js';
-import { img } from '../src/gfx/img.js';
+import {fill} from 'pxcan/src/gfx/fill.js';
+import {pane} from 'pxcan/src/gfx/pane.js';
+import { gridSheet } from 'pxcan/src/gfx/gridsheet.js';
+import { img } from 'pxcan/src/gfx/img.js';
 import { ROOM_SEGMENTS, GROUND_WIDTH, ROOM_WIDTH, ROOM_HEIGHT, MIN_GROUND_HEIGHT, MAX_GROUND_HEIGHT, NUM_PROPS } from './const.js';
 
 const groundImg = img(groundPng);
