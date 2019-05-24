@@ -1,9 +1,9 @@
 import { ROOM_WIDTH, ROOM_HEIGHT } from './const.js';
 import { world } from './world.js';
-import {pane} from 'pxcan/src/gfx/pane.js';
-import {fill} from 'pxcan/src/gfx/fill.js';
-import {letters} from 'pxcan/src/gfx/letters.js';
-import px6 from 'pxcan/src/fonts/px6.js';
+import {pane} from 'pxcan/pane.js';
+import {fill} from 'pxcan/fill.js';
+import {letters} from 'pxcan/letters.js';
+import px6 from 'pxcan/fonts/px6.js';
 
 export function worldview() {
     const seed = 76576;

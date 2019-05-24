@@ -1,8 +1,8 @@
 import { mid, clamp } from './math.js';
 import guysPng from './sprites/guys.png';
-import {recolor} from 'pxcan/src/transform/recolor.js';
-import {flip} from 'pxcan/src/transform/flip.js';
-import { gridSheet } from 'pxcan/src/gfx/gridsheet.js';
+import {recolor} from 'pxcan/recolor.js';
+import {flip} from 'pxcan/flip.js';
+import { gridSheet } from 'pxcan/gridsheet.js';
 import { GROUND_WIDTH, ROOM_WIDTH } from './const.js';
 
 const guysSheet = gridSheet(guysPng, 16, 16);
