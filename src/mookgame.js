@@ -1433,3 +1433,7 @@ function killobj(i3) {
 	x[p.t][i3].o._x=-50;
 	x[p.t][i3].e=0;
 }
+
+export function worldview() {
+    return { gameloop: null };
+}

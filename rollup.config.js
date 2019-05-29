@@ -32,7 +32,7 @@ const plugins = prod ? [
 ]
 
 export default {
-  input: 'example/index.js',
+  input: 'src/index.js',
   output: {
     dir: 'www/build',
     format: 'esm'
