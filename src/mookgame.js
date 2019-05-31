@@ -203,10 +203,12 @@ let onMouseDown=function(_xmouse, _ymouse) {
 	if(p.t==r.length-1) {
 		i1=Math.floor(_ymouse/g);
 		i2=Math.floor(_xmouse/g);
-		if(r[p.t][i1][i2].w._currentframe==1) {
-			r[p.t][i1][i2].w.gotoAndStop(2);
-		} else if(r[p.t][i1][i2].w._currentframe==2) {
-			r[p.t][i1][i2].w.gotoAndStop(1);
+		if (i1 > 0 && i2 > 0 && i1 < q.l[p.t]-1 && i2 < q.m[p.t]-1) {
+			if(r[p.t][i1][i2].w._currentframe==1) {
+				r[p.t][i1][i2].w.gotoAndStop(2);
+			} else if(r[p.t][i1][i2].w._currentframe==2) {
+				r[p.t][i1][i2].w.gotoAndStop(1);
+			}
 		}
 	}
 }
