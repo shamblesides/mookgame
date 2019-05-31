@@ -1503,6 +1503,12 @@ export function worldview({ buttons }) {
 			.filter(s => s.o._currentframe !== 1)
 			.map(s => objectSheet.sprite(s.o._currentframe-1).at(s.o._x, s.o._y).move(_level0._x, _level0._y)),
 		mookSheet.sprite(p._currentframe-1).transform(flip(p._xscale < 0 ? 'h' : '')).at(p._x-14, p._y-25).move(_level0._x, _level0._y),
+		...d[p.t].reduce((arr, { d }) => arr.concat(d), [])
+			.filter(s => s.d._x >= 0 && s.d._alpha > 0)
+			.map(s => particleSheet.sprite(s.d._currentframe-1).at(s.d._x-9, s.d._y-9).move(_level0._x, _level0._y)),
 		roomSprites[p.t].move(_level0._x, _level0._y),
+		...(a._alpha ? [
+			expressSheet.sprite(a._currentframe-1).at(a._x-15, a._y-6).move(_level0._x, _level0._y)
+		] : []),
 	] };
 }
