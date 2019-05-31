@@ -1523,5 +1523,9 @@ export function worldview({ buttons, touches }) {
 		...(a._alpha ? [
 			expressSheet.sprite(a._currentframe-1).at(a._x-15, a._y-6).move(_level0._x, _level0._y)
 		] : []),
+		...(c._currentframe > 1 ? [
+			fill('black', 0, 0, 448, c._currentframe-1),
+			fill('black', 0, 224, 448, -(c._currentframe-1)),
+		] : []),
 	] };
 }
