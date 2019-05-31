@@ -18,6 +18,7 @@ function attachMovie($sheet, $key, $depth) {
 		_currentframe: 1,
 		_x: 0,
 		_y: 0,
+		_alpha: 100,
 		swapDepths(newDepth) {},
 	};
 }
@@ -1506,13 +1507,13 @@ export function worldview({ buttons, touches }) {
 			...r[p.t]
 				.reduce((arr, x) => arr.concat(x))
 				.filter(s => s.l._currentframe === 2)
-				.map(s => fill('rgba(255, 80, 0, 0.5)', s.l._x, s.l._y, g, -g*(s.l._yscale/100))),
+				.map(s => fill('rgba(255, 57, 9, 0.5)', s.l._x, s.l._y, g, -g*(s.l._yscale/100))),
 		]);
 	}
 	return { sprites: [
-		fill('#FEDBCB'),
+		fill('#C7B8B8'),
 		...x[p.t]
-			.filter(s => s.o._currentframe !== 1)
+			.filter(s => s.o._currentframe !== 1 && s.o._alpha)
 			.map(s => objectSheet.sprite(s.o._currentframe-1).at(s.o._x, s.o._y).move(_level0._x, _level0._y)),
 		mookSheet.sprite(p._currentframe-1).transform(flip(p._xscale < 0 ? 'h' : '')).at(p._x-14, p._y-25).move(_level0._x, _level0._y),
 		...d[p.t].reduce((arr, { d }) => arr.concat(d), [])
