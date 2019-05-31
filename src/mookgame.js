@@ -1,4 +1,12 @@
 import { fill } from 'pxcan/fill';
+import { flip } from 'pxcan/flip';
+import { pane } from 'pxcan/pane';
+import { gridSheet } from 'pxcan/gridsheet';
+import expressPng from './express.png';
+import mookPng from './mook.png';
+import objectsPng from './objects.png';
+import particlePng from './particle.png';
+import wallsPng from './walls.png';
 
 function attachMovie($sheet, $key, $depth) {
 	return {
@@ -22,6 +30,12 @@ const _level0 = {
 	_x: 0,
 	_y: 0,
 };
+
+const expressSheet = gridSheet(expressPng, 31, 18)
+const mookSheet = gridSheet(mookPng, 28, 28)
+const objectSheet = gridSheet(objectsPng, 32, 32)
+const particleSheet = gridSheet(particlePng, 18, 18)
+const wallSheet = gridSheet(wallsPng, 32, 32)
 
 //  VARIABLES USED!!
 // g= INT:size of grid pice
@@ -121,7 +135,7 @@ q.n=new Array(r.length); //objects
 q.i=new Array(r.length); //where depth for stuff in that room starts.
 q.k=0;
 
-let i, i1, i2, i3, i4;
+let i, i1, i2, i3, i4, ia, ib;
 
 initroom(0,7,14,0);
 initroom(1,7,14,1);
@@ -180,6 +194,8 @@ let c;
 
 render(0);
 reset(3,2);
+// render(2)
+// reset(5, 2)
 
 let onMouseDown=function() {
 	if(p.t==r.length-1) {
@@ -645,8 +661,10 @@ let onEnterFrame=function(buttons) {
 		}
 		
 		//timer
-		d[p.t][p.m].t1++;
-		d[p.t][p.m].t2++;
+		if (d[p.t][p.m]) {
+			d[p.t][p.m].t1++;
+			d[p.t][p.m].t2++;
+		}
 	}
 	/////////////////////////////////////////
 	
@@ -988,8 +1006,6 @@ let onEnterFrame=function(buttons) {
 	
 	_level0._x=Math.round(v.b);
 	_level0._y=Math.round(v.a);
-
-	console.log(p._x, p._y)
 }
 
 function coord() {
@@ -1218,8 +1234,6 @@ function setroom(i) {
 			
 		}
 	}
-	// TODO this broke
-	// if(!(!i4)) {
 	if(i4 && (typeof i4 === 'object')) {
 		trace(i4);
 		puteffect(0,0,i4.q);
@@ -1468,10 +1482,27 @@ function killobj(i3) {
 	x[p.t][i3].e=0;
 }
 
+const roomSprites = [];
+
 export function worldview({ buttons }) {
 	onEnterFrame(buttons);
+	if (!roomSprites[p.t]) {
+		roomSprites[p.t] = pane(q.m[p.t]*g, q.l[p.t]*g, [
+			...r[p.t]
+				.reduce((arr, x) => arr.concat(x))
+				.map(s => wallSheet.sprite(s.w._currentframe-1).at(s.w._x, s.w._y)),
+			...r[p.t]
+				.reduce((arr, x) => arr.concat(x))
+				.filter(s => s.l._currentframe === 2)
+				.map(s => fill('rgba(255, 80, 0, 0.5)', s.l._x, s.l._y, g, -g*(s.l._yscale/100))),
+		]);
+	}
 	return { sprites: [
-		fill('black'),
-		fill('orange', p._x, p._y, 28, 28),
+		fill('#FEDBCB'),
+		...x[p.t]
+			.filter(s => s.o._currentframe !== 1)
+			.map(s => objectSheet.sprite(s.o._currentframe-1).at(s.o._x, s.o._y).move(_level0._x, _level0._y)),
+		mookSheet.sprite(p._currentframe-1).transform(flip(p._xscale < 0 ? 'h' : '')).at(p._x-14, p._y-25).move(_level0._x, _level0._y),
+		roomSprites[p.t].move(_level0._x, _level0._y),
 	] };
 }
