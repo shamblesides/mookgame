@@ -1,7 +1,9 @@
 export const binds = {
-    up: ['ArrowUp', 'w', ' '],
+    up: ['ArrowUp', 'w'],
     left: ['ArrowLeft', 'a'],
     right: ['ArrowRight', 'd'],
     down: ['ArrowDown', 's'],
-    ok: ['z', 'Enter', 'Escape']
+    jump: ['z'],
+    use: ['x'],
+    powerup: [' '],
 };

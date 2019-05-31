@@ -1,3 +1,28 @@
+import { fill } from 'pxcan/fill';
+
+function attachMovie($sheet, $key, $depth) {
+	return {
+		$sheet, $key, $depth,
+		stop() {},
+		gotoAndStop(n) { this._currentframe = n },
+		nextFrame() { ++this._currentframe; },
+		prevFrame() { --this._currentframe; },
+		_currentframe: 1,
+		_x: 0,
+		_y: 0,
+		swapDepths(newDepth) {},
+	};
+}
+
+function trace(str) {
+	console.log(str);
+}
+
+const _level0 = {
+	_x: 0,
+	_y: 0,
+};
+
 //  VARIABLES USED!!
 // g= INT:size of grid pice
 // i= ___:generic temp variable
@@ -80,13 +105,15 @@
 // v.h = INT:stage height
 // v.w = INT:stage width
 
-_quality="LOW";
+// _quality="LOW";
 
-r= new Array(4); //tiles
-x=new Array(r.length); //objects
-d=new Array(r.length); //particle effectts
+let g=32;
 
-q={};
+let r= new Array(4); //tiles
+let x=new Array(r.length); //objects
+let d=new Array(r.length); //particle effectts
+
+let q={};
 q.j=new Array(r.length); //if they're rendered or not
 q.l=new Array(r.length); //rows =
 q.m=new Array(r.length); //columns ||
@@ -94,16 +121,18 @@ q.n=new Array(r.length); //objects
 q.i=new Array(r.length); //where depth for stuff in that room starts.
 q.k=0;
 
+let i, i1, i2, i3, i4;
+
 initroom(0,7,14,0);
 initroom(1,7,14,1);
 initroom(2,7,14,3);
 initroom(3,10,23,8);
 for(i=0;i<r.length;i++)	q.j[i]=false;
 
-z={};
+let z={};
 z.e={};
 
-v={};
+let v={};
 v.b=0;
 v.a=0;
 v.d=0;
@@ -112,6 +141,7 @@ v.s=16;
 v.h=224;
 v.w=448;
 
+let p;
 {	p=attachMovie("player", "player", -1);
 	p.stop();
 	p.t=0;
@@ -133,6 +163,8 @@ v.w=448;
 	p.m=-1;
 	depthplayer(p);
 }
+let a;
+let c;
 {	a=attachMovie("express","express",-2);
 	a._x=-50;
 	a._y=-50;
@@ -146,12 +178,10 @@ v.w=448;
 	c.s=false;
 }
 
-g=r[p.t][0][0].w._width;
-
 render(0);
 reset(3,2);
 
-onMouseDown=function() {
+let onMouseDown=function() {
 	if(p.t==r.length-1) {
 		i1=Math.floor(_ymouse/g);
 		i2=Math.floor(_xmouse/g);
@@ -163,17 +193,17 @@ onMouseDown=function() {
 	}
 }
 
-onEnterFrame=function() {
+let onEnterFrame=function(buttons) {
 	/// CONTROLS ///
 	//trace(p.k);
 	if(!c.s && p.m==-1) { // if there's nothing going on in the cutscene, otherwords.
-		if(Key.isDown(Key.LEFT) && !Key.isDown(Key.RIGHT)) {
+		if(buttons.left.pressed && !buttons.right.pressed) {
 			p.s-=2;
 			if(p.j==1 && p.e>-1) {//don't change xscale
 			} else p._xscale=-100;
 		} else if(p.s<0) p.s++;
 		
-		if(Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT)) {
+		if(buttons.right.pressed && !buttons.left.pressed) {
 			p.s+=2;
 			if(p.j==1 && p.e>-1) { //don't change xscale
 			} else p._xscale=100;
@@ -188,7 +218,7 @@ onEnterFrame=function() {
 		}
 		
 		// FRAME MODULATING //
-		if((Key.isDown(Key.LEFT) && !Key.isDown(Key.RIGHT)) || (Key.isDown(Key.RIGHT) && !Key.isDown(Key.LEFT))){
+		if((buttons.left.pressed && !buttons.right.pressed) || (buttons.right.pressed && !buttons.left.pressed)){
 			if(p.y==1) p.y=8;
 			else if(p.j==1 && p.e>-1) {
 				p.y+=0.34;
@@ -203,13 +233,13 @@ onEnterFrame=function() {
 		}
 		// end frame modulation.
 		
-		if(Key.isDown(90)) p.u++;
+		if(buttons.jump.pressed) p.u++;
 		else p.u=0;
 		
-		if(Key.isDown(88)) p.x++;
+		if(buttons.use.pressed) p.x++;
 		else p.x=0;
 		
-		if(Key.isDown(Key.SPACE)) p.l++;
+		if(buttons.powerup.pressed) p.l++;
 		else p.l=0;
 		
 	} else if(!c.s) { //THIS IS FOR THE AIMING OF STUFF
@@ -271,13 +301,13 @@ onEnterFrame=function() {
 		}
 		
 		//controlling the parabola's trajectory
-		if(Key.isDown(Key.UP)   && d[p.t][p.m].v>-20)   d[p.t][p.m].v--;
-		if(Key.isDown(Key.DOWN) && d[p.t][p.m].v<0) d[p.t][p.m].v++;
-		if(Key.isDown(Key.LEFT) && d[p.t][p.m].h>6) d[p.t][p.m].h--;
-		if(Key.isDown(Key.RIGHT)&& d[p.t][p.m].h<24)d[p.t][p.m].h++;
+		if(buttons.up.pressed   && d[p.t][p.m].v>-20)   d[p.t][p.m].v--;
+		if(buttons.down.pressed && d[p.t][p.m].v<0) d[p.t][p.m].v++;
+		if(buttons.left.pressed && d[p.t][p.m].h>6) d[p.t][p.m].h--;
+		if(buttons.right.pressed&& d[p.t][p.m].h<24)d[p.t][p.m].h++;
 		
 		// key 88 is X
-		if(Key.isDown(88)) p.x++;
+		if(buttons.use.pressed) p.x++;
 		else p.x=0;
 		
 		//if we just barely pressed X && we have a set collision course
@@ -305,7 +335,7 @@ onEnterFrame=function() {
 			p.m=-1;
 		}
 		//cancel with jump button.
-		if(Key.isDown(90)) {
+		if(buttons.jump.pressed) {
 			p.u++;
 			killeffect(p.m);
 			p.m=-1;
@@ -676,7 +706,7 @@ onEnterFrame=function() {
 	if(r[p.t][p.a][p.c].w._currentframe==1 || r[p.t][p.a][p.d].w._currentframe==1) {
 		i2=true;
 	}
-	for(i1=0;i1<5;i1++) {
+	for(i1=0;i1<x[p.t].length;i1++) {
 		if(x[p.t][i1].o._x<p._x+p.h && x[p.t][i1].o._x+g>p._x-p.h) 
 			if(x[p.t][i1].o._y<=p._y && x[p.t][i1].o._y+g>p._y)
 				if(x[p.t][i1].o._currentframe==2) 
@@ -958,6 +988,8 @@ onEnterFrame=function() {
 	
 	_level0._x=Math.round(v.b);
 	_level0._y=Math.round(v.a);
+
+	console.log(p._x, p._y)
 }
 
 function coord() {
@@ -1107,8 +1139,8 @@ function initroom(i,ia,ib,i1) {
 		for(i2=0;i2<r[i][i1].length;i2++) {
 			r[i][i1][i2]={};
 			r[i][i1][i2].t=attachMovie("tile", "tile"+i+"-"+(i1*q.m[i]+i2), (i1*q.m[i]+i2) +i4+q.i[i] );
-			r[i][i1][i2].t._x=i2*(r[i][i1][i2].t._width);
-			r[i][i1][i2].t._y=i1*(r[i][i1][i2].t._height);
+			r[i][i1][i2].t._x=i2*g;
+			r[i][i1][i2].t._y=i1*g;
 			r[i][i1][i2].t.stop();
 			r[i][i1][i2].t._visible=false;
 		}
@@ -1144,8 +1176,8 @@ function initroom(i,ia,ib,i1) {
 	for(i1=0;i1<r[i].length;i1++) {
 		for(i2=0;i2<r[i][i1].length;i2++) {
 			r[i][i1][i2].l=attachMovie("lq", "lq"+i+"-"+(i1*q.m[i]+i2), (i1*q.m[i]+i2) +i4+q.i[i]);
-			r[i][i1][i2].l._x=i2*(r[i][i1][i2].t._width);
-			r[i][i1][i2].l._y=(i1+1)*(r[i][i1][i2].t._height);
+			r[i][i1][i2].l._x=i2*g;
+			r[i][i1][i2].l._y=(i1+1)*g;
 			r[i][i1][i2].l._yscale=0;
 			r[i][i1][i2].l.stop();
 			r[i][i1][i2].l._visible=false;
@@ -1157,8 +1189,8 @@ function initroom(i,ia,ib,i1) {
 	for(i1=0;i1<r[i].length;i1++) {
 		for(i2=0;i2<r[i][i1].length;i2++) {
 			r[i][i1][i2].w=attachMovie("wall", "wall"+i+"-"+(i1*q.m[i]+i2), (i1*q.m[i]+i2) +i4+q.i[i]);
-			r[i][i1][i2].w._x=i2*(r[i][i1][i2].w._width);
-			r[i][i1][i2].w._y=i1*(r[i][i1][i2].w._height);
+			r[i][i1][i2].w._x=i2*g;
+			r[i][i1][i2].w._y=i1*g;
 			r[i][i1][i2].w.stop();
 			r[i][i1][i2].w._visible=false;
 		}
@@ -1186,7 +1218,9 @@ function setroom(i) {
 			
 		}
 	}
-	if(!(!i4)) {
+	// TODO this broke
+	// if(!(!i4)) {
+	if(i4 && (typeof i4 === 'object')) {
 		trace(i4);
 		puteffect(0,0,i4.q);
 		d[p.t][i3].p=true;
@@ -1219,8 +1253,8 @@ function wiperoom() {
 }
 function depthplayer(i) {
 	i.swapDepths(q.l[i.t]*q.m[i.t]+512 +q.i[i.t]);
-	a.swapDepths(1048574);
-	c.swapDepths(1048575);
+	if (a) a.swapDepths(1048574);
+	if (c) c.swapDepths(1048575);
 	//i.swapDepths(10000);
 }
 
@@ -1269,7 +1303,7 @@ function putlava(ia,ib,i1) {
 			}
 		}
 		//trace(r[p.t][ia][ib].l._yscale);
-		bl=ib;
+		let bl=ib;
 		while(r[p.t][ia][bl-1].w._currentframe!=1) {
 			bl--;
 			if(r[p.t][ia+1][bl].w._currentframe!=1 && r[p.t][ia+1][bl].l._yscale<100) {
@@ -1278,7 +1312,7 @@ function putlava(ia,ib,i1) {
 				continue;
 			}
 		}
-		br=ib;
+		let br=ib;
 		while(r[p.t][ia][br+1].w._currentframe!=1) {
 			br++;
 			if(r[p.t][ia+1][br].w._currentframe!=1 && r[p.t][ia+1][br].l._yscale<100) {
@@ -1287,7 +1321,7 @@ function putlava(ia,ib,i1) {
 				continue;
 			}
 		}
-		div=(br-bl)+1;
+		let div=(br-bl)+1;
 		for(i=bl;i<=br;i++) {
 			r[p.t][ia][i].l.gotoAndStop(2);
 		}
@@ -1297,8 +1331,8 @@ function putlava(ia,ib,i1) {
 			}
 			i4+=10;
 			//trace(i);
-			if(Math.round(r[t][a][b].l._yscale)>=100) {
-				r[p.t][a][i].l._yscale=100;
+			if(Math.round(r[p.t][ia][i].l._yscale)>=100) {
+				r[p.t][ia][i].l._yscale=100;
 				break;
 			}
 		}
@@ -1434,6 +1468,10 @@ function killobj(i3) {
 	x[p.t][i3].e=0;
 }
 
-export function worldview() {
-    return { gameloop: null };
+export function worldview({ buttons }) {
+	onEnterFrame(buttons);
+	return { sprites: [
+		fill('black'),
+		fill('orange', p._x, p._y, 28, 28),
+	] };
 }
