@@ -7,11 +7,6 @@
 </head>
 <body>
   <script>
-    /** Alert if something is broken */
-    window.onerror = function() {
-      alert('Game broke! ' + [].join.call(arguments, ' | '))
-    }
-
     /** Injects a polyfills for Promise and fetch, if needed */
     function polyfillPromiseFetch() {
       if (!('fetch' in window)) {
