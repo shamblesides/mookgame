@@ -35,7 +35,8 @@ export default {
   input: 'src/index.js',
   output: {
     dir: 'www/build',
-    format: 'esm'
+    format: 'esm',
+    sourcemap: true,
   },
   plugins
 };
