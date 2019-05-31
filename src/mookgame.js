@@ -140,7 +140,8 @@ let i, i1, i2, i3, i4, ia, ib;
 initroom(0,7,14,0);
 initroom(1,7,14,1);
 initroom(2,7,14,3);
-initroom(3,10,23,8);
+// initroom(3,10,23,8);
+initroom(3,7,14,0);
 for(i=0;i<r.length;i++)	q.j[i]=false;
 
 let z={};
@@ -194,10 +195,10 @@ let c;
 
 render(0);
 reset(3,2);
-// render(2)
+// render(3)
 // reset(5, 2)
 
-let onMouseDown=function() {
+let onMouseDown=function(_xmouse, _ymouse) {
 	if(p.t==r.length-1) {
 		i1=Math.floor(_ymouse/g);
 		i2=Math.floor(_xmouse/g);
@@ -1081,7 +1082,7 @@ function render(i) {
 		for(i=2;i<=4;i++)
 			nowall(5,i);
 		lwall(5,1,1,5,12);
-		rwall(4,12,3,3,2);
+		rwall(4,12,3,5,2);
 		//putlava(5,10,150);
 		putweed(3,7);
 		putflowerB(3,2);
@@ -1090,35 +1091,40 @@ function render(i) {
 		break;
 		
 		case 3:
-		lwall(3,1,2,4,12);
-		for(i=2;i<=7;i++)
-			nowall(3,i);
-		for(i=4;i<=14;i++)
-			nowall(2,i);
-		for(i=9;i<=12;i++)
-			nowall(1,i);
-		for(i=11;i<=18;i++)
-			nowall(3,i);
-		for(i=16;i<=18;i++)
-			nowall(2,i);
-		for(i=5;i<=6;i++)
-			nowall(4,i);
-		nowall(4,13);
-		for(i=6;i<=9;i++)
-			nowall(5,i);
-		for(i=13;i<=14;i++)
-			nowall(5,i);
-		for(i=7;i<=19;i++)
-			nowall(6,i);
-		for(i=8;i<=20;i++)
-			nowall(7,i);
-		for(i=12;i<=15;i++)
-			nowall(8,i);
-		rwall(7,21,4,4,1);
-		putblock(3,18);
-		putflowerB(7,10);
-		putlava(8,13,200);
+		lwall(5,1,2,4,12);
+		nowall(5,2);
 		break;
+
+		// case 3:
+		// lwall(3,1,2,4,12);
+		// for(i=2;i<=7;i++)
+		// 	nowall(3,i);
+		// for(i=4;i<=14;i++)
+		// 	nowall(2,i);
+		// for(i=9;i<=12;i++)
+		// 	nowall(1,i);
+		// for(i=11;i<=18;i++)
+		// 	nowall(3,i);
+		// for(i=16;i<=18;i++)
+		// 	nowall(2,i);
+		// for(i=5;i<=6;i++)
+		// 	nowall(4,i);
+		// nowall(4,13);
+		// for(i=6;i<=9;i++)
+		// 	nowall(5,i);
+		// for(i=13;i<=14;i++)
+		// 	nowall(5,i);
+		// for(i=7;i<=19;i++)
+		// 	nowall(6,i);
+		// for(i=8;i<=20;i++)
+		// 	nowall(7,i);
+		// for(i=12;i<=15;i++)
+		// 	nowall(8,i);
+		// rwall(7,21,4,4,1);
+		// putblock(3,18);
+		// putflowerB(7,10);
+		// putlava(8,13,200);
+		// break;
 	}
 		
 }
@@ -1484,7 +1490,13 @@ function killobj(i3) {
 
 const roomSprites = [];
 
-export function worldview({ buttons }) {
+export function worldview({ buttons, touches }) {
+	for (const touch of touches.filter(t => t.justPressed)) {
+		try {
+			onMouseDown(touch.x, touch.y);
+			roomSprites[p.t] = null;
+		} catch (_) {}
+	}
 	onEnterFrame(buttons);
 	if (!roomSprites[p.t]) {
 		roomSprites[p.t] = pane(q.m[p.t]*g, q.l[p.t]*g, [
